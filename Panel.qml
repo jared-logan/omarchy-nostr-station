@@ -110,6 +110,16 @@ Panel {
               if (root.service) root.service.open()
             }
           }
+
+          Button {
+            width: parent.width
+            text: "Pair Signer / Setup"
+            enabled: root.isRunning && !root.isStopping
+            foreground: root.barForeground
+            onClicked: {
+              if (root.service) root.service.openSetup()
+            }
+          }
         }
 
         Text {

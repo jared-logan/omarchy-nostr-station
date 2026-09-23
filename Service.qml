@@ -73,6 +73,11 @@ Item {
     return "opened"
   }
 
+  function openSetup() {
+    Quickshell.execDetached(["omarchy-launch-webapp", "http://localhost:3000/setup"])
+    return "opened setup"
+  }
+
   function install() {
     installing = true
     statusText = "installing nostr-station..."
@@ -179,6 +184,7 @@ Item {
     function stop(): string { return root.stop() }
     function restart(): string { return root.restart() }
     function open(): string { return root.open() }
+    function openSetup(): string { return root.openSetup() }
     function status(): string {
       return JSON.stringify({
         installed: root.installed,
