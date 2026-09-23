@@ -33,6 +33,7 @@ Item {
     serverProc.running = true
     running = true
     statusText = "starting..."
+    runningTimer.start()
     return "starting"
   }
 
@@ -65,12 +66,21 @@ Item {
     statusText = "installing nostr-station..."
     installProc.command = [
       "sh", "-c",
-      "curl -fsSL https://raw.githubusercontent.com/jared-logan/nostr-station/main/install.sh | bash"
+      "curl -fsSL https://raw.githubusercontent.com/jared-logan/omarchy-nostr-station/main/install.sh | bash"
     ]
     installProc.running = true
   }
 
   property bool restartPending: false
+
+  Timer {
+    id: runningTimer
+    interval: 3000
+    repeat: false
+    onTriggered: {
+      if (root.running) root.statusText = "running"
+    }
+  }
 
   Process {
     id: probeProc
@@ -116,6 +126,7 @@ Item {
     }
     onExited: (code, status) => {
       root.running = false
+      runningTimer.stop()
       root.statusText = root.installed ? "installed, stopped" : "not installed"
       if (root.restartPending) {
         root.restartPending = false
