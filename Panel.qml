@@ -36,7 +36,7 @@ Panel {
     bar: root.bar
     open: root.opened
     focusTarget: keyCatcher
-    contentWidth: panel.fittedContentWidth(Style.space(260))
+    contentWidth: panel.fittedContentWidth(Style.space(220))
     contentHeight: panel.fittedContentHeight(content.implicitHeight)
 
     PanelKeyCatcher {
@@ -69,10 +69,12 @@ Panel {
           wrapMode: Text.WordWrap
         }
 
-        Row {
+        Column {
+          width: parent.width
           spacing: Style.space(8)
 
           Button {
+            width: parent.width
             text: {
               if (root.isInstalling) return "Installing..."
               if (root.isStopping) return "Stopping..."
@@ -90,6 +92,7 @@ Panel {
           }
 
           Button {
+            width: parent.width
             text: "Restart"
             enabled: root.isInstalled && !root.isInstalling && !root.isStopping
             foreground: root.barForeground
@@ -99,6 +102,7 @@ Panel {
           }
 
           Button {
+            width: parent.width
             text: "Open Dashboard"
             enabled: root.isRunning && !root.isStopping
             foreground: root.barForeground
