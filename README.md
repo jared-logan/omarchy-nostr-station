@@ -38,6 +38,15 @@ omarchy-shell nostr.station restart
 omarchy-shell nostr.station open
 ```
 
+## Agent skill
+
+To let OpenCode (and other agents) know about Nostr Station, symlink the
+skill into your agent config:
+
+```bash
+ln -s ~/.config/omarchy/plugins/nostr.station/skill ~/.config/opencode/skills/nostr-station
+```
+
 ## Identity and signing
 
 Nostr Station keeps doing what it already does: your `nsec` never touches
