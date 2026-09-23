@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "nostr.station",
+  "name": "Nostr Station",
+  "version": "1.0.0",
+  "author": "Jared Logan",
+  "license": "MIT",
+  "description": "Self-hosted Nostr dev station for Omarchy — local relay, Blossom, projects, and nsite.",
+  "kinds": ["service", "bar-widget"],
+  "keepLoaded": true,
+  "entryPoints": {
+    "service": "Service.qml",
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Nostr Station",
+    "category": "Development",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}
