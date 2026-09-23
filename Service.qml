@@ -8,6 +8,7 @@ Item {
   property bool installed: false
   property bool installing: false
   property bool running: false
+  property bool stopping: false
   property string statusText: "checking..."
 
   Component.onCompleted: {
@@ -28,6 +29,7 @@ Item {
 
   function start() {
     if (installing) return "installing"
+    if (stopping) return "stopping"
     if (running) return "already running"
     if (!installed) {
       install()
@@ -48,17 +50,18 @@ Item {
 
   function stop() {
     if (!running) return "not running"
+    stopping = true
+    statusText = "stopping..."
     stopProc.command = [
       "sh", "-c",
       "\"$HOME/nostr-station/bin/nostr-station.sh\" stop 2>/dev/null || nostr-station stop"
     ]
     stopProc.running = true
-    statusText = "stopping..."
     return "stopping"
   }
 
   function restart() {
-    if (running) {
+    if (running || stopping) {
       restartPending = true
       return stop()
     }
@@ -151,6 +154,7 @@ Item {
     }
     onExited: (code, status) => {
       root.running = false
+      root.stopping = false
       runningTimer.stop()
       root.statusText = root.installed ? "installed, stopped" : "not installed"
       if (root.restartPending) {
@@ -179,6 +183,7 @@ Item {
       return JSON.stringify({
         installed: root.installed,
         running: root.running,
+        stopping: root.stopping,
         installing: root.installing,
         statusText: root.statusText
       })

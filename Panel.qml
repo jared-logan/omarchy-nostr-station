@@ -13,6 +13,7 @@ Panel {
 
   readonly property var service: hostWidget ? hostWidget.stationService : null
   readonly property bool isRunning: service ? service.running : false
+  readonly property bool isStopping: service ? service.stopping : false
   readonly property bool isInstalled: service ? service.installed : false
   readonly property bool isInstalling: service ? service.installing : false
   readonly property string statusText: service ? service.statusText : "loading..."
@@ -74,11 +75,12 @@ Panel {
           Button {
             text: {
               if (root.isInstalling) return "Installing..."
+              if (root.isStopping) return "Stopping..."
               if (!root.isInstalled) return "Install"
               if (root.isRunning) return "Stop"
               return "Start"
             }
-            enabled: !root.isInstalling
+            enabled: !root.isInstalling && !root.isStopping
             foreground: root.barForeground
             onClicked: {
               if (!root.service) return
@@ -89,7 +91,7 @@ Panel {
 
           Button {
             text: "Restart"
-            enabled: root.isInstalled && !root.isInstalling
+            enabled: root.isInstalled && !root.isInstalling && !root.isStopping
             foreground: root.barForeground
             onClicked: {
               if (root.service) root.service.restart()
@@ -98,7 +100,7 @@ Panel {
 
           Button {
             text: "Open Dashboard"
-            enabled: root.isRunning
+            enabled: root.isRunning && !root.isStopping
             foreground: root.barForeground
             onClicked: {
               if (root.service) root.service.open()

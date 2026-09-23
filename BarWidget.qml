@@ -9,6 +9,7 @@ BarWidget {
 
   readonly property var stationService: bar && bar.shell ? bar.shell.serviceFor("nostr.station") : null
   readonly property bool isRunning: stationService ? stationService.running : false
+  readonly property bool isStopping: stationService ? stationService.stopping : false
   readonly property bool isInstalled: stationService ? stationService.installed : false
   readonly property bool isInstalling: stationService ? stationService.installing : false
 
@@ -49,6 +50,7 @@ BarWidget {
     bar: root.bar
     text: {
       if (root.isInstalling) return "NS..."
+      if (root.isStopping) return "NS×"
       if (!root.isInstalled) return "NS?"
       if (root.isRunning) return "NS●"
       return "NS○"
