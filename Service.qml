@@ -10,11 +10,20 @@ Item {
   property bool running: false
   property string statusText: "checking..."
 
-  Component.onCompleted: checkInstalled()
+  Component.onCompleted: {
+    checkInstalled()
+    checkRunning()
+  }
 
   function checkInstalled() {
     probeProc.command = ["sh", "-c", "command -v nostr-station >/dev/null 2>&1 && echo yes || echo no"]
     probeProc.running = true
+  }
+
+  function checkRunning() {
+    var cmd = "if [ -f \"$HOME/.config/nostr-station/chat.pid\" ]; then PID=$(cat \"$HOME/.config/nostr-station/chat.pid\"); if kill -0 \"$PID\" 2>/dev/null; then echo running; else echo stopped; fi; else echo stopped; fi"
+    runningProbeProc.command = ["sh", "-c", cmd]
+    runningProbeProc.running = true
   }
 
   function start() {
@@ -88,7 +97,23 @@ Item {
     stdout: SplitParser {
       onRead: (line) => {
         root.installed = (line.trim() === "yes")
-        root.statusText = root.installed ? "installed, stopped" : "not installed"
+        if (!root.running) {
+          root.statusText = root.installed ? "installed, stopped" : "not installed"
+        }
+      }
+    }
+  }
+
+  Process {
+    id: runningProbeProc
+    running: false
+    stdout: SplitParser {
+      onRead: (line) => {
+        var wasRunning = (line.trim() === "running")
+        if (wasRunning && !root.running) {
+          root.running = true
+          root.statusText = "running"
+        }
       }
     }
   }
