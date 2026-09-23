@@ -39,6 +39,8 @@ Item {
     // inherited exactly the same way by every Quickshell Process spawn.
     serverProc.command = [
       "sh", "-c",
+      "NODE22=$(mise where node@22 2>/dev/null || true); " +
+      "if [ -n \"$NODE22\" ] && [ -x \"$NODE22/bin/node\" ]; then export PATH=\"$NODE22/bin:$PATH\"; fi; " +
       "exec \"$HOME/nostr-station/bin/nostr-station.sh\" serve 2>/dev/null || exec nostr-station serve"
     ]
     serverProc.running = true
